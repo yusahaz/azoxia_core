@@ -1,5 +1,6 @@
 namespace Azoxia.Core.Api.Middleware
 {
+    using System.Net;
     using System.Text.Json;
     using Azoxia.Core.Wrappers;
     using Azoxia.Core.Application.Validation;
@@ -7,7 +8,8 @@ namespace Azoxia.Core.Api.Middleware
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Writes <see cref="ApiResponse"/> JSON for the global exception handler pipeline.
@@ -32,25 +34,32 @@ namespace Azoxia.Core.Api.Middleware
             IExceptionHandlerFeature? feature = context.Features.Get<IExceptionHandlerFeature>();
             Exception? error = feature?.Error;
 
-            IWebHostEnvironment? env = context.RequestServices.GetService<IWebHostEnvironment>();
-            bool isDevelopment = env?.IsDevelopment() == true;
+            ILogger? logger = context.RequestServices
+                .GetService<ILoggerFactory>()
+                ?.CreateLogger("ApiResponseExceptionHandler");
 
             if (error is null)
             {
+                logger?.LogError("Unhandled exception pipeline executed without an exception payload.");
                 await WriteBodyAsync(
                         context,
                         StatusCodes.Status500InternalServerError,
-                        ApiResponse.Failure(message: "An unexpected error occurred.", errorCode: "AZX_CORE_INTERNAL"))
+                        ApiResponse.Failure(
+                            statusCode: HttpStatusCode.InternalServerError,
+                            message: "An unexpected error occurred. Please try again later.",
+                            errorCode: "AZX_CORE_INTERNAL"))
                     .ConfigureAwait(false);
                 return;
             }
 
-            (int statusCode, ApiResponse body) = MapException(error, isDevelopment);
+            logger?.LogError(error, "Unhandled exception caught by global API exception handler.");
+
+            (int statusCode, ApiResponse body) = MapException(error);
 
             await WriteBodyAsync(context, statusCode, body).ConfigureAwait(false);
         }
 
-        private static (int StatusCode, ApiResponse Body) MapException(Exception error, bool isDevelopment)
+        private static (int StatusCode, ApiResponse Body) MapException(Exception error)
         {
             if (error is RequestValidationException requestValidationException)
             {
@@ -79,13 +88,12 @@ namespace Azoxia.Core.Api.Middleware
                         errorCode: azoxiaException.Error.Code));
             }
 
-            string message = isDevelopment && error.Message.Length > 0
-                ? error.Message
-                : "An unexpected error occurred.";
-
             return (
                 StatusCodes.Status500InternalServerError,
-                ApiResponse.Failure(message: message, errorCode: "AZX_CORE_INTERNAL"));
+                ApiResponse.Failure(
+                    statusCode: HttpStatusCode.InternalServerError,
+                    message: "An unexpected error occurred. Please try again later.",
+                    errorCode: "AZX_CORE_INTERNAL"));
         }
 
         private static async Task WriteBodyAsync(HttpContext context, int statusCode, ApiResponse body)
