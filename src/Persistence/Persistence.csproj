@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>Azoxia.Core.Persistence</AssemblyName>
+		<RootNamespace>Azoxia.Core.Persistence</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.7" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Core\Core.csproj" />
+	</ItemGroup>
+</Project>

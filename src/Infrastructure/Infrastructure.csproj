@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>Azoxia.Core.Infrastructure</AssemblyName>
+		<RootNamespace>Azoxia.Core.Infrastructure</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.7" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.7" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Application\Application.csproj" />
+	</ItemGroup>
+</Project>

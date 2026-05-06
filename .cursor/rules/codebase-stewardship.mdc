@@ -1,0 +1,21 @@
+---
+description: Kod tabanı bütünlüğü — mevcut yapıyı bozmadan genişletme
+alwaysApply: true
+---
+
+# Kod tabanı titizliği
+
+## Genişlet, yeniden yazma
+
+- Aynı projedeki **isimlendirme, klasör yapısı, import stili, hata işleme ve test desenlerini** kopyala; yeni bileşenleri bu çerçeveye oturt.
+- **Drive-by refactor yok**: İstenen iş dışındaki dosyaları “temizlik” için değiştirme.
+- Ortak davranış varsa mevcut yardımcıları/hook’ları/servisleri **yeniden kullan**; paralel soyutlamalar üretme.
+
+## Regresyon
+
+- Yeni UI veya API eklerken **mevcut ekranları ve sözleşmeleri** kırma; davranış değişecekse bilinçli olarak ve minimum yüzeyle yap.
+- Mobil/UI kuralları projede tanımlıysa (ör. responsive, dp/sp, safe area) **onlara uy**.
+
+## Doğrulama
+
+- Mümkünse ilgili **build/test** komutunu çalıştır veya en azından değişen modülde tip/lint hatası bırakma.

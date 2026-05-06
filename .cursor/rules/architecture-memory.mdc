@@ -1,0 +1,28 @@
+---
+description: Proje belleği — AGENTS.md ve CURSOR_PROJECT_MEMORY senkronu
+alwaysApply: true
+---
+
+# Yapı ve “bellek” (oturumlar arası)
+
+Cursor oturumları arasında sohbet belleği kalıcı değildir. Kalıcı rehber için şu dosyalar kullanılır:
+
+| Dosya | Rol |
+|-------|-----|
+| `AGENTS.md` | Proje özeti, komutlar, kritik kurallar |
+| `docs/CURSOR_PROJECT_MEMORY.md` | Modül haritası, mimari kararlar, son önemli değişiklikler |
+
+## Ne zaman güncelle?
+
+- Yeni önemli modül, katman veya entegrasyon eklendiğinde.
+- Kırıcı API/şema veya “bunu böyle yapıyoruz” kararı alındığında.
+- Büyük refactor sonrası eski açıklamalar artık yanlışsa.
+
+## Nasıl?
+
+- **Kısa ve yapılandırılmış** tut; spekülasyon yerine repo ile uyumlu gerçekleri yaz.
+- Aynı bilgiyi `AGENTS.md` ile çiftlemeyin; tekrarları azalt, çapraz referans ver.
+
+## Görev takibi
+
+- Çok adımlı işlerde analiz sonrası iş listesi oluştur; tamamlanan maddeleri işaretle; blokajları not düş.

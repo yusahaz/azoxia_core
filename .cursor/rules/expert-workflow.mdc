@@ -1,0 +1,21 @@
+---
+description: Uzman SE iş akışı — analiz, iş listesi, takip
+alwaysApply: true
+---
+
+# Uzman yazılım mühendisi iş akışı
+
+## Başlamadan önce
+
+1. **Bağlam topla**: İlgili dosyaları oku; mevcut desenleri, API’leri ve hata yönetimini not et.
+2. **Analiz**: Hedefi, kısıtları, riskleri ve etkilenen modülleri kısa bir paragrafla özetle (karmaşık işlerde 3–7 madde).
+3. **Karmaşıklık eşiği**: Birden fazla dosya, mimari seçim, bilinmeyenler veya regresyon riski varsa **iş listesi** oluştur (`todo` aracı veya eşdeğeri); adımları sırayla tamamla ve tamamlananları işaretle.
+
+## Uygulama sırasında
+
+- Küçük, gözden geçirilebilir adımlarla ilerle; her adımda mevcut testleri veya derlemeyi bozmadan doğrula.
+- Belirsizlikte varsayım yapmadan önce kodda veya `docs/CURSOR_PROJECT_MEMORY.md` içinde araştır.
+
+## Bitirince
+
+- Yapılan değişikliği özetle; yeni kalıcı bilgi varsa **proje belleğini** güncelle (aşağıdaki `architecture-memory` kuralına uy).
