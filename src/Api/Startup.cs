@@ -74,6 +74,8 @@
             // Must run early so preflight (OPTIONS) and response headers honor the SPA origin before auth/compression finalize the response.
             app.UseCors(CorsPolicyName);
 
+            UseNoStoreResponseHeaders(app);
+
             // Compress responses when Accept-Encoding permits (gzip/Brotli depends on DI configuration).
             app.UseResponseCompression();
 
@@ -99,6 +101,28 @@
             app.MapControllers();
 
             OnConfigurePipelines?.Invoke(app);
+        }
+
+        /// <summary>
+        /// Prevents browser or intermediary caches from replaying one authenticated caller's API payload for another caller.
+        /// </summary>
+        /// <param name="app">The built web application.</param>
+        private void UseNoStoreResponseHeaders(WebApplication app)
+        {
+            app.Use(async (context, next) =>
+            {
+                context.Response.OnStarting(() =>
+                {
+                    context.Response.Headers["Cache-Control"] = "no-store, no-cache, max-age=0, must-revalidate, private";
+                    context.Response.Headers["Pragma"] = "no-cache";
+                    context.Response.Headers["Expires"] = "0";
+                    context.Response.Headers.Append("Vary", "Authorization");
+
+                    return Task.CompletedTask;
+                });
+
+                await next();
+            });
         }
 
         /// <summary>
