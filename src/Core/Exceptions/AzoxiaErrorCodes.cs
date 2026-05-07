@@ -73,6 +73,16 @@ namespace Azoxia.Core.Exceptions
             Code: "AZX_CORE_008",
             ErrorMessage: "The requested record or key was not found.");
 
+        /// <summary>User is not allowed to perform the requested operation.</summary>
+        public static readonly ErrorCode PermissionDenied = new(
+            Code: "AZX_CORE_041",
+            ErrorMessage: "You are not allowed to perform this operation.");
+
+        /// <summary>Missing or invalid system_user_id claim required for permission evaluation.</summary>
+        public static readonly ErrorCode SystemUserIdClaimRequired = new(
+            Code: "AZX_CORE_042",
+            ErrorMessage: "A valid system_user_id claim is required.");
+
         /// <summary>Nullable value type has no value.</summary>
         public static readonly ErrorCode NullableValueMissing = new(
             Code: "AZX_CORE_009",

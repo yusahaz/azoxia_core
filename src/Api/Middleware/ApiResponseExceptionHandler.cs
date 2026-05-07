@@ -79,7 +79,9 @@ namespace Azoxia.Core.Api.Middleware
             {
                 int status = string.Equals(azoxiaException.Error.Code, AzoxiaErrorCodes.NotFound.Code, StringComparison.Ordinal)
                     ? StatusCodes.Status404NotFound
-                    : StatusCodes.Status400BadRequest;
+                    : string.Equals(azoxiaException.Error.Code, AzoxiaErrorCodes.PermissionDenied.Code, StringComparison.Ordinal)
+                        ? StatusCodes.Status403Forbidden
+                        : StatusCodes.Status400BadRequest;
 
                 return (
                     status,

@@ -83,6 +83,9 @@
             // Evaluates authorization policies and [Authorize] metadata before MVC/minimal endpoints run.
             app.UseAuthorization();
 
+            // Enforces endpoint-scoped RBAC permissions for authenticated callers.
+            app.UseMiddleware<PermissionEnforcementMiddleware>();
+
             // Discovery document for codegen, gateways, or contract tooling (Swagger UI remains opt-in separately).
             if (isDevelopment)
             {
