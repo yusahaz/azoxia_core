@@ -22,9 +22,4 @@
 		<ProjectReference Include="..\Generators\Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<!-- Ensure newly added authorization/middleware files are compiled. -->
-		<Compile Include="Authorization/RequiresPermissionAttribute.cs" />
-		<Compile Include="Middleware/PermissionEnforcementMiddleware.cs" />
-	</ItemGroup>
 </Project>
