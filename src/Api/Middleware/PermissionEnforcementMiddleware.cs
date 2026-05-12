@@ -11,7 +11,8 @@ namespace Azoxia.Core.Api.Middleware
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Enforces <see cref="RequiresPermissionAttribute"/> by consulting <see cref="IPermissionResolver"/> for authenticated callers.
+    /// Enforces <see cref="RequiresPermissionAttribute"/> when the host application registers a permission resolver type;
+    /// otherwise the pipeline continues (role-based authorization only).
     /// </summary>
     public sealed class PermissionEnforcementMiddleware(RequestDelegate next)
     {
@@ -68,7 +69,9 @@ namespace Azoxia.Core.Api.Middleware
 
             if (resolverType is null)
             {
-                throw new AzoxiaException(AzoxiaErrorCodes.PermissionDenied);
+                // Application may not register a permission resolver (role-based auth only).
+                await _next(context).ConfigureAwait(false);
+                return;
             }
 
             object? resolver = context.RequestServices.GetService(resolverType);

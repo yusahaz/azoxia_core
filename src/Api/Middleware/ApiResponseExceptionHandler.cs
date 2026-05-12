@@ -1,5 +1,6 @@
 namespace Azoxia.Core.Api.Middleware
 {
+    using System;
     using System.Net;
     using System.Text.Json;
     using Azoxia.Core.Wrappers;
@@ -41,6 +42,7 @@ namespace Azoxia.Core.Api.Middleware
             if (error is null)
             {
                 logger?.LogError("Unhandled exception pipeline executed without an exception payload.");
+                Console.Error.WriteLine("Unhandled exception pipeline executed without an exception payload.");
                 await WriteBodyAsync(
                         context,
                         StatusCodes.Status500InternalServerError,
@@ -53,13 +55,20 @@ namespace Azoxia.Core.Api.Middleware
             }
 
             logger?.LogError(error, "Unhandled exception caught by global API exception handler.");
+            if (logger is null)
+            {
+                Console.Error.WriteLine("Unhandled exception caught by global API exception handler (no ILogger available).");
+                Console.Error.WriteLine(error.ToString());
+            }
 
-            (int statusCode, ApiResponse body) = MapException(error);
+            IWebHostEnvironment? environment = context.RequestServices.GetService<IWebHostEnvironment>();
+            bool includeInternalDetails = environment?.IsDevelopment() == true;
+            (int statusCode, ApiResponse body) = MapException(error, includeInternalDetails);
 
             await WriteBodyAsync(context, statusCode, body).ConfigureAwait(false);
         }
 
-        private static (int StatusCode, ApiResponse Body) MapException(Exception error)
+        private static (int StatusCode, ApiResponse Body) MapException(Exception error, bool includeInternalDetails)
         {
             if (error is RequestValidationException requestValidationException)
             {
@@ -95,7 +104,8 @@ namespace Azoxia.Core.Api.Middleware
                 ApiResponse.Failure(
                     statusCode: HttpStatusCode.InternalServerError,
                     message: "An unexpected error occurred. Please try again later.",
-                    errorCode: "AZX_CORE_INTERNAL"));
+                    errorCode: "AZX_CORE_INTERNAL",
+                    errors: includeInternalDetails ? [error.ToString()] : null));
         }
 
         private static async Task WriteBodyAsync(HttpContext context, int statusCode, ApiResponse body)
